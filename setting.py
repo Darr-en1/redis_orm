@@ -1,0 +1,1 @@
+DEFAULT_DATE_TIME_FORMAT = "%Y_%m_%d_%H_%M_%S"
