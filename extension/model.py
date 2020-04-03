@@ -3,7 +3,7 @@ import importlib
 from astra import models, fields
 
 # hash 对象会从缓冲中读取数据,所以得不到最新更新数据
-from extension.execption import InstanceExistError
+from extension.execption import InstanceExistError, InstanceNotExistError
 from extension.filter import obj_filter_by_field, field_key_without_pk_filter
 from setting import redis_client
 
@@ -179,5 +179,11 @@ class BaseModel(models.Model, metaclass=CheckMeta):
             pk = gen_primary_value(cls.__name__)
         if cls(pk=pk).exist():
             raise InstanceExistError()
+        return cls(pk, **kwargs)
 
+    @classmethod
+    def update(cls, **kwargs):
+        pk = kwargs.pop("pk")
+        if not cls(pk=pk).exist():
+            raise InstanceNotExistError()
         return cls(pk, **kwargs)
